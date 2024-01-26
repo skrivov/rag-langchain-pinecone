@@ -14,17 +14,19 @@ const openai = new OpenAI({
 export async function POST(req: Request) {
   const json = await req.json()
   const { messages, previewToken } = json
-  const userId = (await auth())?.user.id
+  // const userId = (await auth())?.user.id
 
-  if (!userId) {
-    return new Response('Unauthorized', {
-      status: 401
-    })
-  }
+  // if (!userId) {
+  //   return new Response('Unauthorized', {
+  //     status: 401
+  //   })
+  // }
 
   if (previewToken) {
     openai.apiKey = previewToken
   }
+
+  console.log("key", process.env.OPENAI_API_KEY)
 
   const res = await openai.chat.completions.create({
     model: 'gpt-3.5-turbo',
@@ -39,6 +41,7 @@ export async function POST(req: Request) {
       const id = json.id ?? nanoid()
       const createdAt = Date.now()
       const path = `/chat/${id}`
+      const userId ='user'
       const payload = {
         id,
         title,
